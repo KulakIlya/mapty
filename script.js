@@ -120,7 +120,11 @@ class App {
   }
 
   _hideForm() {
-    inputDistance.value = inputDuration.value = inputCadence.value = null;
+    inputDistance.value =
+      inputDuration.value =
+      inputCadence.value =
+      inputElevation.value =
+        null;
     form.classList.add('hidden');
   }
 
