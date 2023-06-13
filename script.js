@@ -53,9 +53,9 @@ class Running extends Workout {
 class Cycling extends Workout {
   type = 'cycling';
 
-  constructor(coords, distance, duration, elevationGain) {
+  constructor(coords, distance, duration, elevation) {
     super(coords, distance, duration);
-    this.elevationGain = elevationGain;
+    this.elevation = elevation;
     this.calcSpeed();
 
     this._setDescription();
@@ -150,6 +150,7 @@ class App {
       workout = new Running([lat, lng], distance, duration, cadence);
     } else if (type === 'cycling') {
       const elevation = Number(inputElevation.value);
+
       if (!isValidNumber(distance, duration))
         return alert('You have to write positive number');
 
@@ -263,19 +264,13 @@ class App {
   }
 
   _removeWorkout({ target }) {
-    // const remove = target.closest('[data-remove-btn]');
     const workout = target.closest('.workout');
-    // console.log(workout);
 
-    // console.log(remove);
     if (workout) {
       const indexToDelete = this.#workouts.findIndex(
         (work) => work.id === workout.dataset.id
       );
 
-      // console.log(indexToDelete);
-
-      // workout.marker.remove();
       workout.remove();
 
       this.#markers[indexToDelete].remove();
