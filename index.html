@@ -33,45 +33,58 @@
     <div class="sidebar">
       <img src="./logo.png" alt="Logo" class="logo" />
 
+      <button class="remove-all btn" type="button">Remove All</button>
+      <form class="form hidden">
+        <div class="form__row">
+          <label class="form__label">Type</label>
+          <select class="form__input form__input--type">
+            <option value="running">Running</option>
+            <option value="cycling">Cycling</option>
+          </select>
+        </div>
+        <div class="form__row">
+          <label class="form__label">Distance</label>
+          <input class="form__input form__input--distance" placeholder="km" />
+        </div>
+        <div class="form__row">
+          <label class="form__label">Duration</label>
+          <input class="form__input form__input--duration" placeholder="min" />
+        </div>
+        <div class="form__row">
+          <label class="form__label">Cadence</label>
+          <input
+            class="form__input form__input--cadence"
+            placeholder="step/min"
+          />
+        </div>
+        <div class="form__row form__row--hidden">
+          <label class="form__label">Elev Gain</label>
+          <input
+            class="form__input form__input--elevation"
+            placeholder="meters"
+          />
+        </div>
+        <button class="form__btn">OK</button>
+      </form>
       <ul class="workouts">
-        <form class="form hidden">
-          <div class="form__row">
-            <label class="form__label">Type</label>
-            <select class="form__input form__input--type">
-              <option value="running">Running</option>
-              <option value="cycling">Cycling</option>
-            </select>
-          </div>
-          <div class="form__row">
-            <label class="form__label">Distance</label>
-            <input class="form__input form__input--distance" placeholder="km" />
-          </div>
-          <div class="form__row">
-            <label class="form__label">Duration</label>
-            <input
-              class="form__input form__input--duration"
-              placeholder="min"
-            />
-          </div>
-          <div class="form__row">
-            <label class="form__label">Cadence</label>
-            <input
-              class="form__input form__input--cadence"
-              placeholder="step/min"
-            />
-          </div>
-          <div class="form__row form__row--hidden">
-            <label class="form__label">Elev Gain</label>
-            <input
-              class="form__input form__input--elevation"
-              placeholder="meters"
-            />
-          </div>
-          <button class="form__btn">OK</button>
-        </form>
-
         <!-- <li class="workout workout--running" data-id="1234567890">
           <h2 class="workout__title">Running on April 14</h2>
+          <ul class="icon-list">
+            <li class="icon-list__item">
+              <button type="button" class="btn" data-edit-btn>
+                <svg class="icon-list__icon" width="15" height="15">
+                  <use href="./icons.svg#icon-pencil"></use>
+                </svg>
+              </button>
+            </li>
+            <li class="icon-list__item">
+              <button type="button" class="btn" data-remove-btn>
+                <svg class="icon-list__icon" width="15" height="15">
+                  <use href="./icons.svg#icon-bin"></use>
+                </svg>
+              </button>
+            </li>
+          </ul>
           <div class="workout__details">
             <span class="workout__icon">🏃‍♂️</span>
             <span class="workout__value">5.2</span>
@@ -92,9 +105,9 @@
             <span class="workout__value">178</span>
             <span class="workout__unit">spm</span>
           </div>
-        </li>
+        </li> -->
 
-        <li class="workout workout--cycling" data-id="1234567891">
+        <!--  <li class="workout workout--cycling" data-id="1234567891">
           <h2 class="workout__title">Cycling on April 5</h2>
           <div class="workout__details">
             <span class="workout__icon">🚴‍♀️</span>

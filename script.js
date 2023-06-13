@@ -7,10 +7,14 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
+const removeAllBtn = document.querySelector('.remove-all');
+const removeWorkoutBtn = document.querySelector('[data-remove-btn]');
+const editWorkoutBtn = document.querySelector('[data-edit-btn]');
 
 class Workout {
   date = new Date();
   id = String(Date.now()).slice(-10);
+
   constructor(coords, distance, duration) {
     this.coords = coords;
     this.distance = distance;
@@ -67,17 +71,20 @@ class App {
   #map;
   #currentLatlng;
   #workouts = [];
+  #markers = [];
 
   constructor() {
     this._getPosition();
 
     // Get data from storage
-
     this._getLocalStorage();
 
     form.addEventListener('submit', this._newWorkout.bind(this));
 
-    containerWorkouts.addEventListener('click', this._moveToMarker.bind(this));
+    // containerWorkouts.addEventListener('click', this._moveToMarker.bind(this));
+    containerWorkouts.addEventListener('click', this._removeWorkout.bind(this));
+
+    removeAllBtn.addEventListener('click', this._removeAllWorkouts.bind(this));
 
     inputType.addEventListener('change', this._toggleElevationField);
   }
@@ -109,13 +116,11 @@ class App {
     this.#currentLatlng = latlng;
 
     form.classList.remove('hidden');
-    form.style.display = 'grid';
     inputDistance.focus();
   }
 
   _hideForm() {
     inputDistance.value = inputDuration.value = inputCadence.value = null;
-    form.style.display = 'none';
     form.classList.add('hidden');
   }
 
@@ -155,15 +160,16 @@ class App {
 
     this._hideForm();
 
-    this._renderWorkoutMarker(workout, type);
+    this._renderWorkoutMarker(workout);
     this._renderWorkout(workout);
 
     this._setLocalStorage();
   }
 
   _renderWorkoutMarker(workout) {
-    L.marker(workout.coords)
-      .addTo(this.#map)
+    const marker = L.marker(workout.coords).addTo(this.#map);
+    this.#markers.push(marker);
+    marker
       .bindPopup(
         L.popup({
           maxWidth: 250,
@@ -191,6 +197,22 @@ class App {
   }) {
     let html = `<li class="workout workout--${type}" data-id="${id}">
           <h2 class="workout__title">${description}</h2>
+          <ul class="icon-list">
+            <li class="icon-list__item">
+              <button type="button" class="btn" data-edit-btn>
+                <svg class="icon-list__icon" width="15" height="15">
+                  <use href="./icons.svg#icon-pencil"></use>
+                </svg>
+              </button>
+            </li>
+            <li class="icon-list__item">
+              <button type="button" class="btn" data-remove-btn>
+                <svg class="icon-list__icon" width="15" height="15">
+                  <use href="./icons.svg#icon-bin"></use>
+                </svg>
+              </button>
+            </li>
+          </ul>
           <div class="workout__details">
             <span class="workout__icon">${
               type === 'running' ? '🏃‍♂️' : '🚴‍♀️'
@@ -229,7 +251,39 @@ class App {
             <span class="workout__unit">m</span>
           </div>
         </li>`;
-    form.insertAdjacentHTML('afterend', html);
+    containerWorkouts.innerHTML = html + containerWorkouts.innerHTML;
+  }
+
+  _removeAllWorkouts() {
+    containerWorkouts.innerHTML = '';
+    this.#markers.forEach((marker) => marker.remove());
+    this.#markers = [];
+
+    this._clearLocalStorage();
+  }
+
+  _removeWorkout({ target }) {
+    // const remove = target.closest('[data-remove-btn]');
+    const workout = target.closest('.workout');
+    // console.log(workout);
+
+    // console.log(remove);
+    if (workout) {
+      const indexToDelete = this.#workouts.findIndex(
+        (work) => work.id === workout.dataset.id
+      );
+
+      // console.log(indexToDelete);
+
+      // workout.marker.remove();
+      workout.remove();
+
+      this.#markers[indexToDelete].remove();
+      this.#markers.splice(indexToDelete, 1);
+      this.#workouts.splice(indexToDelete, 1);
+
+      this._removeLocalStorageItem(indexToDelete);
+    }
   }
 
   _moveToMarker({ target }) {
@@ -252,13 +306,23 @@ class App {
 
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem('workouts'));
-    console.log(data);
 
     if (data) {
       this.#workouts = data;
 
       this.#workouts.forEach((work) => this._renderWorkout(work));
     }
+  }
+
+  _clearLocalStorage() {
+    localStorage.removeItem('workouts');
+  }
+
+  _removeLocalStorageItem(index) {
+    const storage = JSON.parse(localStorage.getItem('workouts'));
+
+    storage.splice(index, 1);
+    localStorage.setItem('workouts', JSON.stringify(storage));
   }
 }
 
