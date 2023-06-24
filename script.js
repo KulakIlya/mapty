@@ -120,7 +120,6 @@ class App {
   }
 
   _hideForm() {
-    console.log(inputElevation.value);
     inputDistance.value =
       inputDuration.value =
       inputCadence.value =
